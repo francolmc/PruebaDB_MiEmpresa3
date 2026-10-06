@@ -24,5 +24,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('', website_views.home, name='home'),
-    path('proyectos/crear/', website_views.crear_proyecto, name='crear_proyecto')
+    path('proyectos/crear/', website_views.crear_proyecto, name='crear_proyecto'),
+    path('proyectos/editar/<int:pk>/', website_views.editar_proyecto, name='editar_proyecto')
 ]
