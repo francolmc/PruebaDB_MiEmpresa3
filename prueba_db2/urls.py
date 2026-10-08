@@ -25,5 +25,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('', website_views.home, name='home'),
     path('proyectos/crear/', website_views.crear_proyecto, name='crear_proyecto'),
-    path('proyectos/editar/<int:pk>/', website_views.editar_proyecto, name='editar_proyecto')
+    path('proyectos/editar/<int:pk>/', website_views.editar_proyecto, name='editar_proyecto'),
+    path('proyectos/eliminar/<int:pk>/', website_views.eliminar_proyecto, name="eliminar_proyecto"),
+    path('proyectos/', website_views.lista_proyectos, name='lista_proyectos')
 ]
