@@ -7,6 +7,23 @@
 </head>
 <body>
     <h1>Lista de proyectos</h1>
+
+    <h2>Buscar</h2>
+    <form method="get">
+        <label>Contenido proyecto:</label>
+        <input type="text" name="q" value="{{ q }}" />
+        <select name="categoria">
+            <option value="">Todas las categorias</option>
+            {% for categoria in categorias %}
+            <option 
+                value="{{ categoria.pk }}"
+                {% if categoria.pk|stringformat:"s" == categoria_id %}selected{% endif %}
+            >{{ categoria.nombre }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Buscar</button>
+    </form>
+
     <a href="{% url 'crear_proyecto' %}">Crear nuevo proyecto</a>
     <ul>
         {% for proyecto in proyectos %}

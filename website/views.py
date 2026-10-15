@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ProyectoForm
 from django.contrib.auth.decorators import login_required
-from .models import Proyecto
+from .models import Proyecto, Categoria
+from django.db.models import Q
 
 # Create your views here.
 def home(request):
@@ -40,5 +41,22 @@ def eliminar_proyecto(request, pk):
 
 @login_required
 def lista_proyectos(request):
-    proyectos = Proyecto.objects.all() # SELECT * FROM proyectos
-    return render(request, 'lista_proyectos.html', {'proyectos': proyectos})
+    q = request.GET.get('q', '')
+    categoria = request.GET.get('categoria', '')
+
+    proyectos = Proyecto.objects.order_by('titulo') # SELECT * FROM proyectos
+
+    if q:
+        proyectos = proyectos.filter(
+            Q(titulo__icontains=q) | 
+            Q(descripcion__icontains=q)
+        ) # SELECT * FROM proyectos WHERE titulo LIKE q OR descripcion LIKE q
+    if categoria.isdigit():
+        proyectos = proyectos.filter(categoria_id=categoria)
+
+    return render(request, 'lista_proyectos.html', {
+        'proyectos': proyectos,
+        'q': q,
+        'categorias': Categoria.objects.order_by('nombre'),
+        'categoria_id': categoria
+        })
