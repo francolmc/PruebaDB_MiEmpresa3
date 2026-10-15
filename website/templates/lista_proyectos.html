@@ -25,6 +25,7 @@
     </form>
 
     <a href="{% url 'crear_proyecto' %}">Crear nuevo proyecto</a>
+    <p>{{ proyectos.paginator.count }} proyectos(s) encontrados(s).</p>
     <ul>
         {% for proyecto in proyectos %}
             <li>{{ proyecto.titulo }} 
@@ -35,5 +36,16 @@
             <li>No hay proyectos registrados.</li>
         {% endfor %}
     </ul>
+    {% if proyectos.paginator.num_pages > 1 %}
+    <nav class="paginacion">
+        {% if proyectos.has_previous %}
+        <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ proyectos.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        {% if proyectos.has_next %}
+        <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ proyectos.next_page_number }}">Siguiente</a>
+        {% endif %}
+    </nav>
+    {% endif %}
 </body>
 </html>

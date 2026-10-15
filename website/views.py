@@ -3,6 +3,7 @@ from .forms import ProyectoForm
 from django.contrib.auth.decorators import login_required
 from .models import Proyecto, Categoria
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 # Create your views here.
 def home(request):
@@ -54,9 +55,17 @@ def lista_proyectos(request):
     if categoria.isdigit():
         proyectos = proyectos.filter(categoria_id=categoria)
 
+    paginator = Paginator(proyectos, 1)
+    page_obj = paginator.get_page(request.GET.get('page')) # obtengo el numero de pagina desde la url
+
+    params = request.GET.copy()
+    params.pop('page', None)
+
+
     return render(request, 'lista_proyectos.html', {
-        'proyectos': proyectos,
+        'proyectos': page_obj,
         'q': q,
         'categorias': Categoria.objects.order_by('nombre'),
-        'categoria_id': categoria
+        'categoria_id': categoria,
+        'querystring': params.urlencode()
         })
