@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Categoria(models.Model):
@@ -34,6 +35,13 @@ class Proyecto(models.Model):
     etiquetas = models.ManyToManyField(
         Etiquetas,
         related_name='proyectos',
+        blank=True
+    )
+    usuario = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='proyectos',
+        null=True,
         blank=True
     )
 

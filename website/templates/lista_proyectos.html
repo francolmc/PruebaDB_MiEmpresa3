@@ -28,9 +28,11 @@
     <p>{{ proyectos.paginator.count }} proyectos(s) encontrados(s).</p>
     <ul>
         {% for proyecto in proyectos %}
-            <li>{{ proyecto.titulo }} 
+            <li>{{ proyecto.titulo }} - por {{ proyecto.usuario.username|default:"sin dueño" }}
+                {% if proyecto.usuario == user %}
                 <a href="{% url 'editar_proyecto' proyecto.pk %}">Editar</a>
                 <a href="{% url 'eliminar_proyecto' proyecto.pk %}">Eliminar</a>
+                {% endif %}
             </li>
         {% empty %}
             <li>No hay proyectos registrados.</li>

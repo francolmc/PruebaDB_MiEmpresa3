@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Proyecto, Categoria
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 def home(request):
@@ -14,7 +15,10 @@ def crear_proyecto(request):
     if request.method == 'POST':
         form = ProyectoForm(request.POST)
         if form.is_valid():
-            form.save()
+            proyecto = form.save(commit=False)
+            proyecto.usuario = request.user # asignamos el usuario conectado (autenticado)
+            proyecto.save()
+            proyecto.save_m2m()
             return redirect('lista_proyectos')
     else:
         form = ProyectoForm()
@@ -23,6 +27,8 @@ def crear_proyecto(request):
 @login_required
 def editar_proyecto(request, pk):
     proyecto = get_object_or_404(Proyecto, pk=pk)
+    if proyecto.usuario != request.user:
+        raise PermissionDenied
     if request.method == 'POST':
         form = ProyectoForm(request.POST, instance=proyecto)
         if form.is_valid():
@@ -35,6 +41,8 @@ def editar_proyecto(request, pk):
 @login_required
 def eliminar_proyecto(request, pk):
     proyecto = get_object_or_404(Proyecto, pk=pk)
+    if proyecto.usuario != request.user:
+        raise PermissionDenied
     if request.method == 'POST':
         proyecto.delete()
         return redirect('lista_proyectos')
